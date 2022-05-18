@@ -4,6 +4,7 @@ using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
 using Bioskop.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -13,6 +14,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin, Zaposleni")]
     [ApiController]
     [Route("api/zanr")]
     [Produces("application/json")]
@@ -33,6 +35,7 @@ namespace Bioskop.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,6 +60,7 @@ namespace Bioskop.Controllers
             return Ok(pagedReponse);
         }
 
+        [AllowAnonymous]
         [HttpGet("{zanrId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

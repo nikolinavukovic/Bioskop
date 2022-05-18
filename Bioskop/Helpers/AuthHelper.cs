@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Bioskop.Helpers
@@ -19,23 +20,33 @@ namespace Bioskop.Helpers
             this.korisnikRepository = korisnikRepository;
         }
 
-        public bool AuthenticatePrincipal(Principal principal)
+        public Korisnik AuthenticatePrincipal(Principal principal)
         {
-            if (korisnikRepository.UserWithCredentialsExists(principal.KorisnickoIme, principal.Lozinka))
-            {
-                return true;
-            }
+            Korisnik korisnik = korisnikRepository.UserWithCredentialsExists(principal.KorisnickoIme, principal.Lozinka);
 
-            return false;
+            return korisnik;
         }
 
-        public string GenerateJwt(Principal principal)
+        public string GenerateJwt(Principal principal, string tipKorisnika)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Issuer"], null, expires: DateTime.Now.AddMinutes(120), signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, principal.KorisnickoIme),
+                    new Claim(ClaimTypes.Role, tipKorisnika)
+                }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(tokenKey),
+                SecurityAlgorithms.HmacSha256)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }

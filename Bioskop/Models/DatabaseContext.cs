@@ -44,7 +44,7 @@ namespace Bioskop.Models
                 new TipKorisnika
                 {
                     TipKorisnikaID = Guid.Parse("bc679089-e19f-43e4-946f-651ffbdb2afb"),
-                    Naziv = "Obican korisnik"
+                    Naziv = "Registrovani korisnik"
                 },
                 new TipKorisnika
                 {

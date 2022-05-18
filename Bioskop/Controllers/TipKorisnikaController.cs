@@ -14,10 +14,10 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/tip-korisnika")]
     [Produces("application/json")]
-    [Authorize]
     public class TipKorisnikaController : ControllerBase
     {
         private readonly ITipKorisnikaRepository tipKorisnikaRepository;

@@ -16,10 +16,10 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin, Zaposleni, Registrovani korisnik")]
     [ApiController]
     [Route("api/sediste-projekcije")]
     [Produces("application/json")]
-    [Authorize]
     public class SedisteProjekcijeController : ControllerBase
     {
         private readonly ISedisteProjekcijeRepository sedisteProjekcijeRepository;

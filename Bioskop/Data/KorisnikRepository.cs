@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,21 +84,21 @@ namespace Bioskop.Data
         }
 
 
-        public bool UserWithCredentialsExists(string korisnickoIme, string lozinka)
+        public Korisnik UserWithCredentialsExists(string korisnickoIme, string lozinka)
         {
-            Korisnik korisnik = KorisnikList.FirstOrDefault(k => k.KorisnickoIme == korisnickoIme);
+            Korisnik korisnik = Context.Korisnik.Include(r => r.TipKorisnika).FirstOrDefault(k => k.KorisnickoIme == korisnickoIme);
 
             if (korisnik == null)
             {
-                return false;
+                return null;
             }
 
             if (VerifyPassword(lozinka, korisnik.Lozinka, korisnik.Salt))
             {
-                return true;
+                return korisnik;
             }
 
-            return false;
+            return null;
         }
         private Tuple<string, string> HashPassword(string lozinka)
         {

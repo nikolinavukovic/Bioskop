@@ -11,7 +11,7 @@ namespace Bioskop.Data
         Korisnik CreateKorisnik(Korisnik korisnik);
         Korisnik UpdateKorisnik(Korisnik korisnik);
         void DeleteKorisnik(Guid korisnikId);
-        bool UserWithCredentialsExists(string korisnickoIme, string lozinka);
+        Korisnik UserWithCredentialsExists(string korisnickoIme, string lozinka);
         bool SaveChanges();
     }
 }

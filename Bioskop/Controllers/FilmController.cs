@@ -5,6 +5,7 @@ using Bioskop.Helpers;
 using Bioskop.Models;
 using Bioskop.Services;
 using Bioskop.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -14,6 +15,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin, Zaposleni")]
     [ApiController]
     [Route("api/film")]
     [Produces("application/json")]
@@ -32,6 +34,8 @@ namespace Bioskop.Controllers
             this.uriService = uriService;
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,6 +61,7 @@ namespace Bioskop.Controllers
             return Ok(pagedReponse);
         }
 
+        [AllowAnonymous]
         [HttpGet("{filmId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,6 +76,7 @@ namespace Bioskop.Controllers
 
             return Ok(mapper.Map<Film>(film));
         }
+
 
         [HttpPost]
         [Consumes("application/json")]
@@ -95,6 +101,7 @@ namespace Bioskop.Controllers
             }
 
         }
+
 
         [HttpDelete("{filmId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

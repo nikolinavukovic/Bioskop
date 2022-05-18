@@ -14,10 +14,10 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin, Zaposleni")]
     [ApiController]
     [Route("api/sediste")]
     [Produces("application/json")]
-    [Authorize]
     public class SedisteController : ControllerBase
     {
         private readonly ISedisteRepository sedisteRepository;
@@ -35,6 +35,7 @@ namespace Bioskop.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,6 +60,7 @@ namespace Bioskop.Controllers
             return Ok(pagedReponse);
         }
 
+        [AllowAnonymous]
         [HttpGet("{sedisteId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

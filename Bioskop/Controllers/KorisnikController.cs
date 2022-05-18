@@ -14,6 +14,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    [Authorize(Roles = "Admin, Zaposleni, Registrovani korisnik")]
     [ApiController]
     [Route("api/korisnik")]
     [Produces("application/json")]
@@ -71,6 +72,7 @@ namespace Bioskop.Controllers
             return Ok(mapper.Map<Korisnik>(korisnik));
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]

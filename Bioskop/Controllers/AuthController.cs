@@ -23,12 +23,15 @@ namespace Bioskop.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Login([FromBody] Principal principal)
         {
-            if (authHelper.AuthenticatePrincipal(principal))
+            Korisnik korisnik = authHelper.AuthenticatePrincipal(principal);
+            if (korisnik != null)
             {
-                var tokenString = authHelper.GenerateJwt(principal);
+                var token = authHelper.GenerateJwt(principal, korisnik.TipKorisnika.Naziv);
 
-                return Ok(new { token = tokenString });
+
+                return Ok(token);
             }
+
 
             return Unauthorized();
         }
