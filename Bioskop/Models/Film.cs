@@ -11,15 +11,15 @@ namespace Bioskop.Models
         [Required]
         public string Naziv { get; set; }
 
-        public int Trajanje { get; set; }  
+        public int Trajanje { get; set; }
 
-        public string Reziser { get; set; } 
+        public string Reziser { get; set; }
 
-        public string OriginalniNaziv { get; set; } 
+        public string OriginalniNaziv { get; set; }
 
-        public string Drzava { get; set; }  
+        public string Drzava { get; set; }
 
-        public string Opis { get; set; }    
+        public string Opis { get; set; }
 
         public int Godina { get; set; }
 

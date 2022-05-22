@@ -3,6 +3,7 @@ using Bioskop.Data;
 using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 using Bioskop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,18 +22,19 @@ namespace Bioskop.Controllers
     public class ProjekcijaController : ControllerBase
     {
         private readonly IProjekcijaRepository projekcijaRepository;
+        private readonly IFilmRepository filmRepository;
         private readonly LinkGenerator linkGenerator;
         private readonly IMapper mapper;
         private readonly IUriService uriService;
 
 
-        public ProjekcijaController(IProjekcijaRepository projekcijaRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService)
+        public ProjekcijaController(IProjekcijaRepository projekcijaRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService, IFilmRepository filmRepository)
         {
             this.projekcijaRepository = projekcijaRepository;
             this.linkGenerator = linkGenerator;
             this.mapper = mapper;
             this.uriService = uriService;
-
+            this.filmRepository = filmRepository;
         }
 
         [AllowAnonymous]
@@ -56,7 +58,7 @@ namespace Bioskop.Controllers
                 .Take(validFilter.PageSize)
                 .ToList();
             var totalRecords = projekcijas.Count;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Projekcija>(pagedData, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<ProjekcijaDto>(mapper.Map<List<ProjekcijaDto>>(pagedData), validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }
 
@@ -72,7 +74,7 @@ namespace Bioskop.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<Projekcija>(projekcija));
+            return Ok(mapper.Map<ProjekcijaDto>(projekcija));
         }
 
         [HttpPost]
@@ -87,14 +89,16 @@ namespace Bioskop.Controllers
                 var projekcijaEntity = mapper.Map<Projekcija>(projekcija);
                 var confirmation = projekcijaRepository.CreateProjekcija(projekcijaEntity);
 
+                confirmation.Film = projekcijaRepository.GetProjekcijaById(confirmation.ProjekcijaID).Film;
+
                 projekcijaRepository.SaveChanges();
                 string location = linkGenerator.GetPathByAction("GetProjekcijaList", "Projekcija", new { projekcijaId = confirmation.ProjekcijaID });
-                return Created(location, mapper.Map<Projekcija>(confirmation));
+                return Created(location, mapper.Map<ProjekcijaDto>(confirmation));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -114,9 +118,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -129,22 +133,27 @@ namespace Bioskop.Controllers
         {
             try
             {
+                projekcijaRepository.GetProjekcijaById(projekcija.ProjekcijaID).Film = filmRepository.GetFilmById(projekcija.FilmID);
                 var oldProjekcija = projekcijaRepository.GetProjekcijaById(projekcija.ProjekcijaID);
                 if (oldProjekcija == null)
                 {
                     return NotFound();
                 }
 
+                Film f = oldProjekcija.Film;
+
                 Projekcija projekcijaEntity = mapper.Map<Projekcija>(projekcija);
 
                 mapper.Map(projekcijaEntity, oldProjekcija);
 
+                oldProjekcija.Film = f;
+
                 projekcijaRepository.SaveChanges();
-                return Ok(mapper.Map<Projekcija>(oldProjekcija));
+                return Ok(mapper.Map<ProjekcijaDto>(oldProjekcija));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 

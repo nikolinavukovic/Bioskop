@@ -1,5 +1,3 @@
-using System;
-
 namespace Bioskop.Models
 {
     public class ErrorViewModel

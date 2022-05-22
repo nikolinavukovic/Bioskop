@@ -4,7 +4,6 @@ using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
 using Bioskop.Services;
-using Bioskop.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -95,9 +94,9 @@ namespace Bioskop.Controllers
                 return Created(location, mapper.Map<Film>(confirmation));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -118,9 +117,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -146,9 +145,9 @@ namespace Bioskop.Controllers
                 filmRepository.SaveChanges();
                 return Ok(mapper.Map<Film>(oldFilm));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 

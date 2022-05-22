@@ -13,7 +13,7 @@ namespace Bioskop.Models
 
         [Key]
         [ForeignKey("ProjekcijaID")]
-        public Guid ProjekcijaID { get; set; } 
+        public Guid ProjekcijaID { get; set; }
 
         [Required]
         public float Cena { get; set; }

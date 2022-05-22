@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace Bioskop.Data
 
         public List<Kupovina> GetKupovinaList(bool placeno = default)
         {
-            return Context.Kupovina.Where(e => (placeno == default || e.Placeno.Equals(placeno))).ToList();
+            return Context.Kupovina.Include(r => r.Korisnik).Where(e => (placeno == default || e.Placeno.Equals(placeno))).ToList();
         }
 
         public Kupovina GetKupovinaById(Guid kupovinaId)
         {
-            return Context.Kupovina.FirstOrDefault(e => e.KupovinaID == kupovinaId);
+            return Context.Kupovina.Include(r => r.Korisnik).FirstOrDefault(e => e.KupovinaID == kupovinaId);
         }
 
         public Kupovina CreateKupovina(Kupovina kupovina)

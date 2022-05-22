@@ -246,21 +246,21 @@ namespace Bioskop.Migrations
                             ProjekcijaID = new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"),
-                            Vreme = new DateTime(2022, 5, 11, 16, 11, 10, 243, DateTimeKind.Local).AddTicks(3513)
+                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 601, DateTimeKind.Local).AddTicks(2413)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 5, 11, 16, 11, 10, 247, DateTimeKind.Local).AddTicks(1065)
+                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6685)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 5, 11, 16, 11, 10, 247, DateTimeKind.Local).AddTicks(1139)
+                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6902)
                         });
                 });
 
@@ -365,7 +365,12 @@ namespace Bioskop.Migrations
                         new
                         {
                             TipKorisnikaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"),
-                            Naziv = "Obican korisnik"
+                            Naziv = "Registrovani korisnik"
+                        },
+                        new
+                        {
+                            TipKorisnikaID = new Guid("0475c5d6-8db1-461e-84f4-81a22451a834"),
+                            Naziv = "Zaposleni"
                         },
                         new
                         {
@@ -448,7 +453,7 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.TipKorisnika", "TipKorisnika")
                         .WithMany()
                         .HasForeignKey("TipKorisnikaID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TipKorisnika");
@@ -459,7 +464,7 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.Korisnik", "Korisnik")
                         .WithMany()
                         .HasForeignKey("KorisnikID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Korisnik");
@@ -470,7 +475,7 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Film");
@@ -487,13 +492,13 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.Projekcija", "Projekcija")
                         .WithMany()
                         .HasForeignKey("ProjekcijaID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Bioskop.Models.Sediste", "Sediste")
                         .WithMany()
                         .HasForeignKey("SedisteID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Kupovina");
@@ -508,13 +513,13 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.Film", "Film")
                         .WithMany()
                         .HasForeignKey("FilmID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Bioskop.Models.Zanr", "Zanr")
                         .WithMany()
                         .HasForeignKey("ZanrID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Film");

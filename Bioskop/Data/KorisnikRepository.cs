@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,12 @@ namespace Bioskop.Data
 
         public List<Korisnik> GetKorisnikList()
         {
-            return Context.Korisnik.ToList();
+            return Context.Korisnik.Include(r => r.TipKorisnika).ToList();
         }
 
         public Korisnik GetKorisnikById(Guid korisnikId)
         {
-            return Context.Korisnik.FirstOrDefault(e => e.KorisnikID == korisnikId);
+            return Context.Korisnik.Include(r => r.TipKorisnika).FirstOrDefault(e => e.KorisnikID == korisnikId);
         }
 
         public Korisnik CreateKorisnik(Korisnik korisnik)
@@ -49,7 +50,7 @@ namespace Bioskop.Data
 
         public Korisnik UpdateKorisnik(Korisnik korisnik)
         {
-            Korisnik k = Context.Korisnik.FirstOrDefault(e => e.KorisnikID == korisnik.KorisnikID);
+            Korisnik k = Context.Korisnik.Include(r => r.TipKorisnika).FirstOrDefault(e => e.KorisnikID == korisnik.KorisnikID);
 
             if (k == null)
                 throw new EntryPointNotFoundException();
@@ -83,6 +84,17 @@ namespace Bioskop.Data
             Context.SaveChanges();
         }
 
+        public bool UserWithEmailExists(string email)
+        {
+            Korisnik korisnik = Context.Korisnik.FirstOrDefault(k => k.Email == email);
+
+            if (korisnik == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         public Korisnik UserWithCredentialsExists(string korisnickoIme, string lozinka)
         {
@@ -119,9 +131,20 @@ namespace Bioskop.Data
 
             return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == savedLozinka;
         }
-    
 
-    public bool SaveChanges()
+        public bool UserWithUsernameExistst(string username)
+        {
+            Korisnik korisnik = Context.Korisnik.FirstOrDefault(k => k.KorisnickoIme == username);
+
+            if (korisnik == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool SaveChanges()
         {
             return Context.SaveChanges() > 0;
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace Bioskop.Data
 
         public List<ZanrFilma> GetZanrFilmaList()
         {
-            return Context.ZanrFilma.ToList();
+            return Context.ZanrFilma.Include(zf => zf.Film).Include(zf => zf.Zanr).ToList();
         }
 
         public ZanrFilma GetZanrFilmaById(Guid zanrId, Guid filmId)
         {
-            return Context.ZanrFilma.FirstOrDefault(e => e.ZanrID == zanrId &&
+            return Context.ZanrFilma.Include(zf => zf.Film).Include(zf => zf.Zanr).FirstOrDefault(e => e.ZanrID == zanrId &&
                                                             e.FilmID == filmId);
         }
 

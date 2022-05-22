@@ -3,8 +3,8 @@ using Bioskop.Data;
 using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 using Bioskop.Services;
-using Bioskop.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +22,21 @@ namespace Bioskop.Controllers
     public class ZanrFilmaController : ControllerBase
     {
         private readonly IZanrFilmaRepository zanrFilmaRepository;
+        private readonly IZanrRepository zanrRepository;
+        private readonly IFilmRepository filmRepository;
         private readonly LinkGenerator linkGenerator;
         private readonly IMapper mapper;
         private readonly IUriService uriService;
 
 
-        public ZanrFilmaController(IZanrFilmaRepository zanrFilmaRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService)
+        public ZanrFilmaController(IZanrFilmaRepository zanrFilmaRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService, IZanrRepository zanrRepository, IFilmRepository filmRepository)
         {
             this.zanrFilmaRepository = zanrFilmaRepository;
             this.linkGenerator = linkGenerator;
             this.mapper = mapper;
             this.uriService = uriService;
+            this.zanrRepository = zanrRepository;
+            this.filmRepository = filmRepository;
         }
 
         [AllowAnonymous]
@@ -56,7 +60,7 @@ namespace Bioskop.Controllers
                 .Take(validFilter.PageSize)
                 .ToList();
             var totalRecords = zanrFilmas.Count();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<ZanrFilma>(pagedData, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<ZanrFilmaDto>(mapper.Map<List<ZanrFilmaDto>>(pagedData), validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }
 
@@ -72,7 +76,7 @@ namespace Bioskop.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<ZanrFilma>(zanrFilma));
+            return Ok(mapper.Map<ZanrFilmaDto>(zanrFilma));
         }
 
         [HttpPost]
@@ -87,14 +91,17 @@ namespace Bioskop.Controllers
                 var zanrFilmaEntity = mapper.Map<ZanrFilma>(zanrFilma);
                 var confirmation = zanrFilmaRepository.CreateZanrFilma(zanrFilmaEntity);
 
+                confirmation.Film = zanrFilmaRepository.GetZanrFilmaById(confirmation.ZanrID, confirmation.FilmID).Film;
+                confirmation.Zanr = zanrFilmaRepository.GetZanrFilmaById(confirmation.ZanrID, confirmation.FilmID).Zanr;
+
                 zanrFilmaRepository.SaveChanges();
-                string location = linkGenerator.GetPathByAction("GetZanrFilmaList", "ZanrFilma", new { zanrId = confirmation.ZanrID, filmId = confirmation.FilmID} ) ;
-                return Created(location, mapper.Map<ZanrFilma>(confirmation));
+                string location = linkGenerator.GetPathByAction("GetZanrFilmaList", "ZanrFilma", new { zanrId = confirmation.ZanrID, filmId = confirmation.FilmID });
+                return Created(location, mapper.Map<ZanrFilmaDto>(confirmation));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -114,9 +121,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -129,22 +136,31 @@ namespace Bioskop.Controllers
         {
             try
             {
+                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID).Film = filmRepository.GetFilmById(zanrFilma.FilmID);
+                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID).Zanr = zanrRepository.GetZanrById(zanrFilma.ZanrID);
                 var oldZanrFilma = zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID);
                 if (oldZanrFilma == null)
                 {
                     return NotFound();
                 }
 
+                Film f = oldZanrFilma.Film;
+                Zanr z = oldZanrFilma.Zanr;
+
+
                 ZanrFilma zanrFilmaEntity = mapper.Map<ZanrFilma>(zanrFilma);
 
                 mapper.Map(zanrFilmaEntity, oldZanrFilma);
 
+                oldZanrFilma.Film = f;
+                oldZanrFilma.Zanr = z;
+
                 zanrFilmaRepository.SaveChanges();
-                return Ok(mapper.Map<ZanrFilma>(oldZanrFilma));
+                return Ok(mapper.Map<ZanrFilmaDto>(oldZanrFilma));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 

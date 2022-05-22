@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bioskop.Migrations
 {
-    public partial class migr : Migration
+    public partial class m : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,7 +79,7 @@ namespace Bioskop.Migrations
                         column: x => x.FilmID,
                         principalTable: "Film",
                         principalColumn: "FilmID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,7 +104,7 @@ namespace Bioskop.Migrations
                         column: x => x.TipKorisnikaID,
                         principalTable: "TipKorisnika",
                         principalColumn: "TipKorisnikaID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,13 +122,13 @@ namespace Bioskop.Migrations
                         column: x => x.FilmID,
                         principalTable: "Film",
                         principalColumn: "FilmID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ZanrFilma_Zanr_ZanrID",
                         column: x => x.ZanrID,
                         principalTable: "Zanr",
                         principalColumn: "ZanrID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,7 +140,7 @@ namespace Bioskop.Migrations
                     Placeno = table.Column<bool>(type: "bit", nullable: false),
                     VremeRezervacije = table.Column<DateTime>(type: "datetime2", nullable: false),
                     VremePlacanja = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    KorisnikID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    KorisnikID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,7 +150,7 @@ namespace Bioskop.Migrations
                         column: x => x.KorisnikID,
                         principalTable: "Korisnik",
                         principalColumn: "KorisnikID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,13 +176,13 @@ namespace Bioskop.Migrations
                         column: x => x.ProjekcijaID,
                         principalTable: "Projekcija",
                         principalColumn: "ProjekcijaID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SedisteProjekcije_Sediste_SedisteID",
                         column: x => x.SedisteID,
                         principalTable: "Sediste",
                         principalColumn: "SedisteID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -210,7 +210,8 @@ namespace Bioskop.Migrations
                 columns: new[] { "TipKorisnikaID", "Naziv" },
                 values: new object[,]
                 {
-                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), "Obican korisnik" },
+                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), "Registrovani korisnik" },
+                    { new Guid("0475c5d6-8db1-461e-84f4-81a22451a834"), "Zaposleni" },
                     { new Guid("d7a80343-d802-43d6-b128-79ba8554acd2"), "Admin" }
                 });
 
@@ -239,9 +240,9 @@ namespace Bioskop.Migrations
                 columns: new[] { "ProjekcijaID", "BrojStampanihKarata", "FilmID", "Vreme" },
                 values: new object[,]
                 {
-                    { new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"), 150, new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"), new DateTime(2022, 5, 11, 16, 11, 10, 243, DateTimeKind.Local).AddTicks(3513) },
-                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 11, 16, 11, 10, 247, DateTimeKind.Local).AddTicks(1065) },
-                    { new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 11, 16, 11, 10, 247, DateTimeKind.Local).AddTicks(1139) }
+                    { new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"), 150, new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"), new DateTime(2022, 5, 22, 11, 19, 13, 601, DateTimeKind.Local).AddTicks(2413) },
+                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6685) },
+                    { new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6902) }
                 });
 
             migrationBuilder.InsertData(

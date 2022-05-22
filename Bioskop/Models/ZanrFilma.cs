@@ -13,7 +13,7 @@ namespace Bioskop.Models
         public Guid FilmID { get; set; }
 
         [JsonIgnore]
-        public Zanr Zanr { get; set; } 
+        public Zanr Zanr { get; set; }
         [JsonIgnore]
         public Film Film { get; set; }
 

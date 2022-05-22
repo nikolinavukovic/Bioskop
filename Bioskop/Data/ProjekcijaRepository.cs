@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace Bioskop.Data
 
         public List<Projekcija> GetProjekcijaList()
         {
-            return Context.Projekcija.ToList();
+            return Context.Projekcija.Include(p => p.Film).ToList();
         }
 
         public Projekcija GetProjekcijaById(Guid projekcijaId)
         {
-            return Context.Projekcija.FirstOrDefault(e => e.ProjekcijaID == projekcijaId);
+            return Context.Projekcija.Include(p => p.Film).FirstOrDefault(e => e.ProjekcijaID == projekcijaId);
         }
 
         public Projekcija CreateProjekcija(Projekcija projekcija)
@@ -44,10 +45,10 @@ namespace Bioskop.Data
             if (p == null)
                 throw new EntryPointNotFoundException();
 
-/*            p.ProjekcijaID = projekcija.ProjekcijaID;
-            p.BrojSlobodnihSedista = projekcija.BrojSlobodnihSedista;
-            p.Vreme = projekcija.Vreme;
-            p.FilmID = projekcija.FilmID;*/
+            /*            p.ProjekcijaID = projekcija.ProjekcijaID;
+                        p.BrojSlobodnihSedista = projekcija.BrojSlobodnihSedista;
+                        p.Vreme = projekcija.Vreme;
+                        p.FilmID = projekcija.FilmID;*/
 
             Context.SaveChanges();
 

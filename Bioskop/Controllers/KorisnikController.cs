@@ -3,6 +3,7 @@ using Bioskop.Data;
 using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 using Bioskop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +35,7 @@ namespace Bioskop.Controllers
 
         }
 
+        [AllowAnonymous] //mogu obrisati kasnije, dodato radi lakseg testiranja
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -54,10 +56,11 @@ namespace Bioskop.Controllers
                 .Take(validFilter.PageSize)
                 .ToList();
             var totalRecords = korisniks.Count;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Korisnik>(pagedData, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<KorisnikDto>(mapper.Map<List<KorisnikDto>>(pagedData), validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }
 
+        [AllowAnonymous] //mogu obrisati kasnije, dodato radi lakseg testiranja
         [HttpGet("{korisnikId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -69,7 +72,7 @@ namespace Bioskop.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<Korisnik>(korisnik));
+            return Ok(mapper.Map<KorisnikDto>(korisnik));
         }
 
         [AllowAnonymous]
@@ -83,16 +86,36 @@ namespace Bioskop.Controllers
             {
 
                 var korisnikEntity = mapper.Map<Korisnik>(korisnik);
+
+
+                bool validMail = EmailHelper.IsValidEmail(korisnik.Email);
+
+                if (!validMail || korisnikRepository.UserWithEmailExists(korisnik.Email))
+                {
+                    throw new ArgumentException("The email field is not valid or the email is already in use.");
+                }
+
+                if (korisnikRepository.UserWithUsernameExistst(korisnik.KorisnickoIme))
+                {
+                    throw new ArgumentException("The username field is not valid or the username is already in use.");
+                }
+
+
                 var confirmation = korisnikRepository.CreateKorisnik(korisnikEntity);
+
 
                 korisnikRepository.SaveChanges();
                 string location = linkGenerator.GetPathByAction("GetKorisnikList", "Korisnik", new { korisnikId = confirmation.KorisnikID });
-                return Created(location, mapper.Map<Korisnik>(confirmation));
+                return Created(location, mapper.Map<KorisnikDto>(confirmation));
 
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -112,9 +135,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -128,21 +151,35 @@ namespace Bioskop.Controllers
             try
             {
                 var oldKorisnik = korisnikRepository.GetKorisnikById(korisnik.KorisnikID);
+
                 if (oldKorisnik == null)
                 {
-                    return NotFound();
+                    return NotFound(); //Ukoliko ne postoji vratiti status 404 (NotFound).
                 }
 
-                Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
+/*                if (EmailHelper.IsValidEmail(korisnik.Email) || korisnikRepository.UserWithEmailExists(korisnik.Email))
+                {
+                    throw new ArgumentException("The email field is not valid or the email is already in use.");
+                }
 
+                if (korisnikRepository.UserWithUsernameExistst(korisnik.KorisnickoIme))
+                {
+                    throw new ArgumentException("The username field is not valid or the username is already in use.");
+                }*/
+
+                TipKorisnika tk = oldKorisnik.TipKorisnika;
+
+                Korisnik korisnikEntity = mapper.Map<Korisnik>(korisnik);
                 mapper.Map(korisnikEntity, oldKorisnik);
 
+                oldKorisnik.TipKorisnika = tk;
+
                 korisnikRepository.SaveChanges();
-                return Ok(mapper.Map<Korisnik>(oldKorisnik));
+                return Ok(mapper.Map<KorisnikDto>(oldKorisnik));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 

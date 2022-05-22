@@ -65,7 +65,7 @@ namespace Bioskop.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<TipKorisnika> GetTipKorisnikaById(Guid tipKorisnikaId)
         {
-            TipKorisnika tipKorisnika  = tipKorisnikaRepository.GetTipKorisnikaById(tipKorisnikaId);
+            TipKorisnika tipKorisnika = tipKorisnikaRepository.GetTipKorisnikaById(tipKorisnikaId);
             if (tipKorisnika == null)
             {
                 return NotFound();
@@ -92,9 +92,9 @@ namespace Bioskop.Controllers
                 return Created(location, mapper.Map<TipKorisnika>(confirmation));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -114,9 +114,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -136,18 +136,18 @@ namespace Bioskop.Controllers
                 }
                 TipKorisnika tipKorisnikaEntity = mapper.Map<TipKorisnika>(tipKorisnika);
 
-                mapper.Map(tipKorisnikaEntity, oldTip);                
+                mapper.Map(tipKorisnikaEntity, oldTip);
 
                 tipKorisnikaRepository.SaveChanges();
                 return Ok(mapper.Map<TipKorisnika>(oldTip));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
- 
+
 
         [HttpOptions]
         public IActionResult GetTipKorisnikaOptions()

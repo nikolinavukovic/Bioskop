@@ -39,12 +39,45 @@ namespace Bioskop.Models
             modelBuilder.Entity<ZanrFilma>().HasKey("ZanrID", "FilmID");
             modelBuilder.Entity<SedisteProjekcije>().HasKey("SedisteID", "ProjekcijaID");
 
+            modelBuilder.Entity<Korisnik>()
+                .HasOne(d => d.TipKorisnika)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Kupovina>()
+                .HasOne(d => d.Korisnik)
+                .WithMany().OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Projekcija>()
+                .HasOne(d => d.Film)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ZanrFilma>()
+                .HasOne(d => d.Film)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ZanrFilma>()
+                .HasOne(d => d.Zanr)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SedisteProjekcije>()
+                .HasOne(d => d.Sediste)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SedisteProjekcije>()
+                .HasOne(d => d.Projekcija)
+                .WithMany().OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<TipKorisnika>()
                 .HasData(
                 new TipKorisnika
                 {
                     TipKorisnikaID = Guid.Parse("bc679089-e19f-43e4-946f-651ffbdb2afb"),
                     Naziv = "Registrovani korisnik"
+                },
+                new TipKorisnika
+                {
+                    TipKorisnikaID = Guid.Parse("0475c5d6-8db1-461e-84f4-81a22451a834"),
+                    Naziv = "Zaposleni"
                 },
                 new TipKorisnika
                 {

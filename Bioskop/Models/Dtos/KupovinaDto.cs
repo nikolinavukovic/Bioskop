@@ -1,28 +1,19 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
-namespace Bioskop.Models
+namespace Bioskop.Models.Dtos
 {
-    public class Kupovina
+    public class KupovinaDto
     {
-        [Key]
         public Guid KupovinaID { get; set; }
 
         public float UkupanIznos { get; set; }
 
-        [Required]
         public bool Placeno { get; set; }
 
         public DateTime VremeRezervacije { get; set; }
 
         public DateTime VremePlacanja { get; set; }
 
-        //[ForeignKey("KorisnikID")]
-        public Guid KorisnikID { get; set; }
-
-        [JsonIgnore]
         public Korisnik Korisnik { get; set; }
 
 

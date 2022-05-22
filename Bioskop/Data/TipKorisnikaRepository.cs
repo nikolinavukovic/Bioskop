@@ -34,7 +34,7 @@ namespace Bioskop.Data
             Context.SaveChanges();
 
             return Mapper.Map<TipKorisnika>(tipKorisnika);
-        
+
         }
 
         public TipKorisnika UpdateTipKorisnika(TipKorisnika tipKorisnika)
@@ -58,7 +58,7 @@ namespace Bioskop.Data
         {
             TipKorisnika tipKorisnika = GetTipKorisnikaById(tipKorisnikaId);
 
-            if(tipKorisnika == null)
+            if (tipKorisnika == null)
             {
                 throw new ArgumentNullException(nameof(tipKorisnikaId));
             }

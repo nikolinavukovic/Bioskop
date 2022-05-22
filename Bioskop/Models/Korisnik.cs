@@ -18,7 +18,7 @@ namespace Bioskop.Models
         public string Telefon { get; set; }
 
         [Required]
-        public string Email { get; set; }   
+        public string Email { get; set; }
 
         [Required]
         public string KorisnickoIme { get; set; }
@@ -28,7 +28,7 @@ namespace Bioskop.Models
 
         public string Salt { get; set; }
 
-        public Guid TipKorisnikaID { get; set; } 
+        public Guid TipKorisnikaID { get; set; }
 
         [JsonIgnore]
         public TipKorisnika TipKorisnika { get; set; }

@@ -3,6 +3,7 @@ using Bioskop.Data;
 using Bioskop.Filter;
 using Bioskop.Helpers;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 using Bioskop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,15 @@ namespace Bioskop.Controllers
     public class KupovinaController : ControllerBase
     {
         private readonly IKupovinaRepository kupovinaRepository;
+        private readonly IKorisnikRepository korisnikRepository;
         private readonly LinkGenerator linkGenerator;
         private readonly IMapper mapper;
         private readonly IUriService uriService;
 
-        public KupovinaController(IKupovinaRepository kupovinaRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService)
+        public KupovinaController(IKupovinaRepository kupovinaRepository, IKorisnikRepository korisnikRepository, LinkGenerator linkGenerator, IMapper mapper, IUriService uriService)
         {
             this.kupovinaRepository = kupovinaRepository;
+            this.korisnikRepository = korisnikRepository;
             this.linkGenerator = linkGenerator;
             this.mapper = mapper;
             this.uriService = uriService;
@@ -54,7 +57,7 @@ namespace Bioskop.Controllers
                 .Take(validFilter.PageSize)
                 .ToList();
             var totalRecords = kupovinas.Count;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Kupovina>(pagedData, validFilter, totalRecords, uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<KupovinaDto>(mapper.Map<List<KupovinaDto>>(pagedData), validFilter, totalRecords, uriService, route);
             return Ok(pagedReponse);
         }
 
@@ -69,7 +72,7 @@ namespace Bioskop.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<Kupovina>(kupovina));
+            return Ok(mapper.Map<KupovinaDto>(kupovina));
         }
 
         [HttpPost]
@@ -80,18 +83,19 @@ namespace Bioskop.Controllers
         {
             try
             {
-
                 var kupovinaEntity = mapper.Map<Kupovina>(kupovina);
                 var confirmation = kupovinaRepository.CreateKupovina(kupovinaEntity);
 
+                confirmation.Korisnik = kupovinaRepository.GetKupovinaById(confirmation.KupovinaID).Korisnik;
+
                 kupovinaRepository.SaveChanges();
                 string location = linkGenerator.GetPathByAction("GetKupovinaList", "Kupovina", new { kupovinaId = confirmation.KupovinaID });
-                return Created(location, mapper.Map<Kupovina>(confirmation));
+                return Created(location, mapper.Map<KupovinaDto>(confirmation));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when creating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
 
         }
@@ -111,9 +115,9 @@ namespace Bioskop.Controllers
                 return NoContent();
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when deleting an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 
@@ -126,14 +130,16 @@ namespace Bioskop.Controllers
         {
             try
             {
+                kupovinaRepository.GetKupovinaById(kupovina.KupovinaID).Korisnik = korisnikRepository.GetKorisnikById(kupovina.KorisnikID);
                 var oldKupovina = kupovinaRepository.GetKupovinaById(kupovina.KupovinaID);
                 if (oldKupovina == null)
                 {
                     return NotFound();
                 }
 
-                Kupovina kupovinaEntity = mapper.Map<Kupovina>(kupovina);
+                Korisnik k = oldKupovina.Korisnik;
 
+                Kupovina kupovinaEntity = mapper.Map<Kupovina>(kupovina);
 
                 //Podesavanje vremena rezervacije i placanja prilikom update
                 kupovinaEntity.VremeRezervacije = oldKupovina.VremeRezervacije;
@@ -149,12 +155,14 @@ namespace Bioskop.Controllers
 
                 mapper.Map(kupovinaEntity, oldKupovina);
 
+                oldKupovina.Korisnik = k;
+
                 kupovinaRepository.SaveChanges();
-                return Ok(mapper.Map<Kupovina>(oldKupovina));
+                return Ok(mapper.Map<KupovinaDto>(oldKupovina));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error has occurred when updating an object");
+                return StatusCode(StatusCodes.Status500InternalServerError, e.GetBaseException().Message);
             }
         }
 

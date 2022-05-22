@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +20,19 @@ namespace Bioskop.Data
 
         public List<SedisteProjekcije> GetSedisteProjekcijeList()
         {
-            return Context.SedisteProjekcije.ToList();
+            return Context.SedisteProjekcije.Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina)
+                                                                                                                    .ToList();
         }
 
         public SedisteProjekcije GetSedisteProjekcijeById(Guid sedisteId, Guid projekcijaId)
         {
-            return Context.SedisteProjekcije.FirstOrDefault(e => e.SedisteID == sedisteId &&
+            return Context.SedisteProjekcije.Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina)
+                                                            .FirstOrDefault(e => e.SedisteID == sedisteId &&
                                                             e.ProjekcijaID == projekcijaId);
         }
 
         public SedisteProjekcije CreateSedisteProjekcije(SedisteProjekcije sedisteProjekcije)
         {
-
             Context.SedisteProjekcije.Add(sedisteProjekcije);
             Context.SaveChanges();
 

@@ -33,7 +33,7 @@ namespace Bioskop.Controllers
             }
 
 
-            return Unauthorized();
+            return Unauthorized("Pogrešno korisničko ime ili lozinka.");
         }
     }
 }

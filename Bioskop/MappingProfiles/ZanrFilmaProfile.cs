@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bioskop.Models;
+using Bioskop.Models.Dtos;
 
 namespace Bioskop.MappingProfiles
 {
@@ -8,6 +9,7 @@ namespace Bioskop.MappingProfiles
         public ZanrFilmaProfile()
         {
             CreateMap<ZanrFilma, ZanrFilma>();
+            CreateMap<ZanrFilma, ZanrFilmaDto>();
         }
     }
 }
