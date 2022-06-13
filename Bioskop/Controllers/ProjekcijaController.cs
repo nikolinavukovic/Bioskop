@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
-    [Authorize(Roles = "Admin, Zaposleni")]
+    //[Authorize(Roles = "Admin, Zaposleni")]
     [ApiController]
     [Route("api/projekcija")]
     [Produces("application/json")]

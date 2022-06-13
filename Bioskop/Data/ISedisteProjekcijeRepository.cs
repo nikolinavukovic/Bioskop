@@ -6,7 +6,7 @@ namespace Bioskop.Data
 {
     public interface ISedisteProjekcijeRepository
     {
-        List<SedisteProjekcije> GetSedisteProjekcijeList();
+        List<SedisteProjekcije> GetSedisteProjekcijeList(Guid kupovinaID, Guid projekcijaID);
         SedisteProjekcije GetSedisteProjekcijeById(Guid sedisteId, Guid projekcijaId);
         SedisteProjekcije CreateSedisteProjekcije(SedisteProjekcije sedisteProjekcije);
         SedisteProjekcije UpdateSedisteProjekcije(SedisteProjekcije sedisteProjekcije);

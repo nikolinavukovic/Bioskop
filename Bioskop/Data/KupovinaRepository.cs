@@ -18,9 +18,37 @@ namespace Bioskop.Data
             Mapper = mapper;
         }
 
-        public List<Kupovina> GetKupovinaList(bool placeno = default)
+        public List<Kupovina> GetKupovinaList(string placeno = default, string korisnickoIme = default)
         {
-            return Context.Kupovina.Include(r => r.Korisnik).Where(e => (placeno == default || e.Placeno.Equals(placeno))).ToList();
+
+            if (placeno != default && korisnickoIme != default)
+            {
+                
+                Console.WriteLine(1);
+                return Context.Kupovina.Where(a => (a.Placeno.Equals(Convert.ToBoolean(placeno)) &&
+                        (korisnickoIme == default || a.Korisnik.KorisnickoIme.Equals(korisnickoIme)))).Include(r => r.SedistaProjekcije).ToList();
+            }
+
+            else if (placeno != default  && korisnickoIme == default)
+            {
+                Console.WriteLine(2);
+                return Context.Kupovina.Where(a => (a.Placeno.Equals(Convert.ToBoolean(placeno)))).Include(r => r.SedistaProjekcije)
+                                                                                                   .ToList();
+            }
+            else if (placeno == default && korisnickoIme != default)
+            {
+                Console.WriteLine(3);
+                
+                return Context.Kupovina.Where(a => 
+                        (korisnickoIme == default || a.Korisnik.KorisnickoIme.Equals(korisnickoIme))).Include(r => r.SedistaProjekcije)
+                                                                                                      .ToList();
+            }
+            else
+            {
+                Console.WriteLine(4);
+                return Context.Kupovina.Include(r => r.SedistaProjekcije).ToList();
+            }
+
         }
 
         public Kupovina GetKupovinaById(Guid kupovinaId)

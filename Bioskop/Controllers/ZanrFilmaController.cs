@@ -65,12 +65,12 @@ namespace Bioskop.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{zanrId}/{filmId}")]
+        [HttpGet("{filmId}/{zanrId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ZanrFilma> GetZanrFilmaById(Guid zanrId, Guid filmId)
+        public ActionResult<ZanrFilma> GetZanrFilmaById(Guid filmId, Guid zanrId)
         {
-            ZanrFilma zanrFilma = zanrFilmaRepository.GetZanrFilmaById(zanrId, filmId);
+            ZanrFilma zanrFilma = zanrFilmaRepository.GetZanrFilmaById(filmId, zanrId);
             if (zanrFilma == null)
             {
                 return NotFound();
@@ -91,8 +91,8 @@ namespace Bioskop.Controllers
                 var zanrFilmaEntity = mapper.Map<ZanrFilma>(zanrFilma);
                 var confirmation = zanrFilmaRepository.CreateZanrFilma(zanrFilmaEntity);
 
-                confirmation.Film = zanrFilmaRepository.GetZanrFilmaById(confirmation.ZanrID, confirmation.FilmID).Film;
-                confirmation.Zanr = zanrFilmaRepository.GetZanrFilmaById(confirmation.ZanrID, confirmation.FilmID).Zanr;
+                confirmation.Film = zanrFilmaRepository.GetZanrFilmaById(confirmation.FilmID, confirmation.ZanrID).Film;
+                confirmation.Zanr = zanrFilmaRepository.GetZanrFilmaById(confirmation.FilmID, confirmation.ZanrID).Zanr;
 
                 zanrFilmaRepository.SaveChanges();
                 string location = linkGenerator.GetPathByAction("GetZanrFilmaList", "ZanrFilma", new { zanrId = confirmation.ZanrID, filmId = confirmation.FilmID });
@@ -106,17 +106,17 @@ namespace Bioskop.Controllers
 
         }
 
-        [HttpDelete("{zanrId}/{filmId}")]
+        [HttpDelete("{filmId}/{zanrId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult DeleteZanrFilma(Guid zanrId, Guid filmId)
+        public IActionResult DeleteZanrFilma(Guid filmId, Guid zanrId)
         {
             try
             {
-                var zanrFilma = zanrFilmaRepository.GetZanrFilmaById(zanrId, filmId);
+                var zanrFilma = zanrFilmaRepository.GetZanrFilmaById(filmId, zanrId);
 
-                zanrFilmaRepository.DeleteZanrFilma(zanrId, filmId);
+                zanrFilmaRepository.DeleteZanrFilma(filmId, zanrId);
                 zanrFilmaRepository.SaveChanges();
                 return NoContent();
 
@@ -136,9 +136,10 @@ namespace Bioskop.Controllers
         {
             try
             {
-                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID).Film = filmRepository.GetFilmById(zanrFilma.FilmID);
-                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID).Zanr = zanrRepository.GetZanrById(zanrFilma.ZanrID);
-                var oldZanrFilma = zanrFilmaRepository.GetZanrFilmaById(zanrFilma.ZanrID, zanrFilma.FilmID);
+                Console.WriteLine(zanrFilma.FilmID.ToString());
+                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.FilmID, zanrFilma.ZanrID).Film = filmRepository.GetFilmById(zanrFilma.FilmID);
+                zanrFilmaRepository.GetZanrFilmaById(zanrFilma.FilmID, zanrFilma.ZanrID).Zanr = zanrRepository.GetZanrById(zanrFilma.ZanrID);
+                var oldZanrFilma = zanrFilmaRepository.GetZanrFilmaById(zanrFilma.FilmID, zanrFilma.ZanrID);
                 if (oldZanrFilma == null)
                 {
                     return NotFound();

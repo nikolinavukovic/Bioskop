@@ -23,7 +23,7 @@ namespace Bioskop.Data
             return Context.ZanrFilma.Include(zf => zf.Film).Include(zf => zf.Zanr).ToList();
         }
 
-        public ZanrFilma GetZanrFilmaById(Guid zanrId, Guid filmId)
+        public ZanrFilma GetZanrFilmaById(Guid filmId, Guid zanrId)
         {
             return Context.ZanrFilma.Include(zf => zf.Film).Include(zf => zf.Zanr).FirstOrDefault(e => e.ZanrID == zanrId &&
                                                             e.FilmID == filmId);
@@ -55,7 +55,7 @@ namespace Bioskop.Data
             return Mapper.Map<ZanrFilma>(zf);
         }
 
-        public void DeleteZanrFilma(Guid zanrId, Guid filmId)
+        public void DeleteZanrFilma(Guid filmId, Guid zanrId)
         {
             ZanrFilma zf = Context.ZanrFilma.FirstOrDefault(e => e.ZanrID == zanrId &&
                                                             e.FilmID == filmId);

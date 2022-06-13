@@ -7,7 +7,7 @@ namespace Bioskop.Data
 {
     public interface IKorisnikRepository
     {
-        List<Korisnik> GetKorisnikList();
+        List<Korisnik> GetKorisnikList(string korisnickoIme);
         Korisnik GetKorisnikById(Guid korisnikId);
         Korisnik CreateKorisnik(Korisnik korisnik);
         Korisnik UpdateKorisnik(Korisnik korisnik);

@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
-    [Authorize(Roles = "Admin, Zaposleni, Registrovani korisnik")]
+    //[Authorize(Roles = "Admin, Zaposleni, Registrovani korisnik")]
     [ApiController]
     [Route("api/sediste-projekcije")]
     [Produces("application/json")]
@@ -46,9 +46,9 @@ namespace Bioskop.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
-        public ActionResult<List<SedisteProjekcije>> GetSedisteProjekcijeList([FromQuery] PaginationFilter filter)
+        public ActionResult<List<SedisteProjekcijeDto>> GetSedisteProjekcijeList([FromQuery] PaginationFilter filter, Guid kupovinaID, Guid projekcijaID)
         {
-            List<SedisteProjekcije> sedisteProjekcijes = sedisteProjekcijeRepository.GetSedisteProjekcijeList();
+            List<SedisteProjekcije> sedisteProjekcijes = sedisteProjekcijeRepository.GetSedisteProjekcijeList(kupovinaID, projekcijaID);
             if (sedisteProjekcijes == null || sedisteProjekcijes.Count == 0)
             {
 
@@ -77,7 +77,6 @@ namespace Bioskop.Controllers
             {
                 return NotFound();
             }
-
             return Ok(mapper.Map<SedisteProjekcijeDto>(sedisteProjekcije));
         }
 
@@ -89,6 +88,10 @@ namespace Bioskop.Controllers
         {
             try
             {
+                if (sedisteProjekcije.KupovinaID == new Guid("00000000-0000-0000-0000-000000000000"))
+                {
+                    sedisteProjekcije.KupovinaID = new Guid("2cc310d7-0fc9-49af-bf7d-a60954c7f69b");
+                }
 
                 var sedisteProjekcijeEntity = mapper.Map<SedisteProjekcije>(sedisteProjekcije);
                 var confirmation = sedisteProjekcijeRepository.CreateSedisteProjekcije(sedisteProjekcijeEntity);

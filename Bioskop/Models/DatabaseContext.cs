@@ -67,6 +67,8 @@ namespace Bioskop.Models
                 .HasOne(d => d.Projekcija)
                 .WithMany().OnDelete(DeleteBehavior.Restrict);
 
+
+
             modelBuilder.Entity<TipKorisnika>()
                 .HasData(
                 new TipKorisnika

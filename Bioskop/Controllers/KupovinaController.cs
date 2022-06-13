@@ -41,9 +41,9 @@ namespace Bioskop.Controllers
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<Kupovina>> GetKupovinaList([FromQuery] PaginationFilter filter, bool placeno)
+        public ActionResult<List<Kupovina>> GetKupovinaList([FromQuery] PaginationFilter filter, string placeno, string korisnickoIme)
         {
-            List<Kupovina> kupovinas = kupovinaRepository.GetKupovinaList(placeno);
+            List<Kupovina> kupovinas = kupovinaRepository.GetKupovinaList(placeno, korisnickoIme);
             if (kupovinas == null || kupovinas.Count == 0)
             {
 

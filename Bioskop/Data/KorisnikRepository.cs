@@ -23,9 +23,9 @@ namespace Bioskop.Data
             KorisnikList.AddRange(GetKorisnikList());
         }
 
-        public List<Korisnik> GetKorisnikList()
+        public List<Korisnik> GetKorisnikList(string korisnickoIme = default)
         {
-            return Context.Korisnik.Include(r => r.TipKorisnika).ToList();
+            return Context.Korisnik.Where(e => (korisnickoIme == default || e.KorisnickoIme.Equals(korisnickoIme))).Include(r => r.TipKorisnika).ToList();
         }
 
         public Korisnik GetKorisnikById(Guid korisnikId)

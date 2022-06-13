@@ -246,21 +246,21 @@ namespace Bioskop.Migrations
                             ProjekcijaID = new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"),
-                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 601, DateTimeKind.Local).AddTicks(2413)
+                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 335, DateTimeKind.Local).AddTicks(8759)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6685)
+                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4036)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6902)
+                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4101)
                         });
                 });
 
@@ -484,10 +484,9 @@ namespace Bioskop.Migrations
             modelBuilder.Entity("Bioskop.Models.SedisteProjekcije", b =>
                 {
                     b.HasOne("Bioskop.Models.Kupovina", "Kupovina")
-                        .WithMany()
+                        .WithMany("SedistaProjekcije")
                         .HasForeignKey("KupovinaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Bioskop.Models.Projekcija", "Projekcija")
                         .WithMany()
@@ -525,6 +524,11 @@ namespace Bioskop.Migrations
                     b.Navigation("Film");
 
                     b.Navigation("Zanr");
+                });
+
+            modelBuilder.Entity("Bioskop.Models.Kupovina", b =>
+                {
+                    b.Navigation("SedistaProjekcije");
                 });
 #pragma warning restore 612, 618
         }

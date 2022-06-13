@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Bioskop.Models
@@ -18,7 +19,8 @@ namespace Bioskop.Models
         [Required]
         public float Cena { get; set; }
 
-        [Required]
+        //[Required]
+        [AllowNull]
         [ForeignKey("KupovinaID")]
         public Guid KupovinaID { get; set; }
 
@@ -28,6 +30,7 @@ namespace Bioskop.Models
         [JsonIgnore]
         public Sediste Sediste { get; set; }
 
+        [AllowNull]
         [JsonIgnore]
         public Kupovina Kupovina { get; set; }
 

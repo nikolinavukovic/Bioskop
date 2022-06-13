@@ -18,15 +18,17 @@ namespace Bioskop.Data
             Mapper = mapper;
         }
 
-        public List<SedisteProjekcije> GetSedisteProjekcijeList()
+        public List<SedisteProjekcije> GetSedisteProjekcijeList(Guid kupovinaID = default, Guid projekcijaID = default)
         {
-            return Context.SedisteProjekcije.Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina)
+            return Context.SedisteProjekcije.Where(e => (kupovinaID == default || e.KupovinaID.Equals(kupovinaID))&&
+                                                    (projekcijaID == default || e.ProjekcijaID.Equals(projekcijaID)))
+            .Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina).Include(sp => sp.Projekcija.Film)
                                                                                                                     .ToList();
         }
 
         public SedisteProjekcije GetSedisteProjekcijeById(Guid sedisteId, Guid projekcijaId)
         {
-            return Context.SedisteProjekcije.Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina)
+            return Context.SedisteProjekcije.Include(sp => sp.Sediste).Include(sp => sp.Projekcija).Include(sp => sp.Kupovina).Include(sp => sp.Projekcija.Film)
                                                             .FirstOrDefault(e => e.SedisteID == sedisteId &&
                                                             e.ProjekcijaID == projekcijaId);
         }

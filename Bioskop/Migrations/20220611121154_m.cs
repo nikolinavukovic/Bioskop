@@ -160,7 +160,7 @@ namespace Bioskop.Migrations
                     SedisteID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjekcijaID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Cena = table.Column<float>(type: "real", nullable: false),
-                    KupovinaID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    KupovinaID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -170,7 +170,8 @@ namespace Bioskop.Migrations
                         column: x => x.KupovinaID,
                         principalTable: "Kupovina",
                         principalColumn: "KupovinaID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull
+                    );
                     table.ForeignKey(
                         name: "FK_SedisteProjekcije_Projekcija_ProjekcijaID",
                         column: x => x.ProjekcijaID,
@@ -240,9 +241,9 @@ namespace Bioskop.Migrations
                 columns: new[] { "ProjekcijaID", "BrojStampanihKarata", "FilmID", "Vreme" },
                 values: new object[,]
                 {
-                    { new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"), 150, new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"), new DateTime(2022, 5, 22, 11, 19, 13, 601, DateTimeKind.Local).AddTicks(2413) },
-                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6685) },
-                    { new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 5, 22, 11, 19, 13, 615, DateTimeKind.Local).AddTicks(6902) }
+                    { new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"), 150, new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"), new DateTime(2022, 6, 11, 14, 11, 48, 335, DateTimeKind.Local).AddTicks(8759) },
+                    { new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4036) },
+                    { new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"), 150, new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"), new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4101) }
                 });
 
             migrationBuilder.InsertData(

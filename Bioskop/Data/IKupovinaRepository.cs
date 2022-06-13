@@ -6,7 +6,7 @@ namespace Bioskop.Data
 {
     public interface IKupovinaRepository
     {
-        List<Kupovina> GetKupovinaList(bool placeno);
+        List<Kupovina> GetKupovinaList(string placeno, string korisnickoIme);
         Kupovina GetKupovinaById(Guid kupovinaId);
         Kupovina CreateKupovina(Kupovina kupovina);
         Kupovina UpdateKupovina(Kupovina kupovina);

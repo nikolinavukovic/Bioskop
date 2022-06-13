@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Bioskop.Models
 {
@@ -13,6 +14,8 @@ namespace Bioskop.Models
 
         [Required]
         public int BrojSedista { get; set; }
+
+
 
     }
 }

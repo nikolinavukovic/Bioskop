@@ -15,6 +15,7 @@ using System.Linq;
 
 namespace Bioskop.Controllers
 {
+    
     [Authorize(Roles = "Admin, Zaposleni, Registrovani korisnik")]
     [ApiController]
     [Route("api/korisnik")]
@@ -40,9 +41,9 @@ namespace Bioskop.Controllers
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<Korisnik>> GetKorisnikList([FromQuery] PaginationFilter filter)
+        public ActionResult<List<Korisnik>> GetKorisnikList([FromQuery] PaginationFilter filter, string korisnickoIme)
         {
-            List<Korisnik> korisniks = korisnikRepository.GetKorisnikList();
+            List<Korisnik> korisniks = korisnikRepository.GetKorisnikList(korisnickoIme);
             if (korisniks == null || korisniks.Count == 0)
             {
 
@@ -92,12 +93,12 @@ namespace Bioskop.Controllers
 
                 if (!validMail || korisnikRepository.UserWithEmailExists(korisnik.Email))
                 {
-                    throw new ArgumentException("The email field is not valid or the email is already in use.");
+                    throw new ArgumentException("Email nije validan ili se već koristi.");
                 }
 
                 if (korisnikRepository.UserWithUsernameExistst(korisnik.KorisnickoIme))
                 {
-                    throw new ArgumentException("The username field is not valid or the username is already in use.");
+                    throw new ArgumentException("Korisničko ime nije validno ili se već koristi.");
                 }
 
 

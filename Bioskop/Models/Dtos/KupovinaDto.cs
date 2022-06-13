@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Bioskop.Models.Dtos
 {
@@ -15,6 +16,11 @@ namespace Bioskop.Models.Dtos
         public DateTime VremePlacanja { get; set; }
 
         public Korisnik Korisnik { get; set; }
+
+        public List<SedisteProjekcije> SedistaProjekcije { get; set; } //ovo sam promenila da bih imala projekcijaID u kupovini
+
+        //public Projekcija Projekcija { get; set; }
+
 
 
     }

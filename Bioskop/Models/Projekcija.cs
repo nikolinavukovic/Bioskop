@@ -22,5 +22,8 @@ namespace Bioskop.Models
 
         [JsonIgnore]
         public Film Film { get; set; }
+
+
+
     }
 }

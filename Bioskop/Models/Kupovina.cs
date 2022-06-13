@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Bioskop.Models
@@ -20,10 +22,14 @@ namespace Bioskop.Models
         public DateTime VremePlacanja { get; set; }
 
         //[ForeignKey("KorisnikID")]
+        [AllowNull]
         public Guid KorisnikID { get; set; }
 
         [JsonIgnore]
         public Korisnik Korisnik { get; set; }
+
+        [JsonIgnore]
+        public List<SedisteProjekcije> SedistaProjekcije { get; set; }
 
 
     }
