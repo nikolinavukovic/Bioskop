@@ -84,6 +84,11 @@ namespace Bioskop.Data
             Context.SaveChanges();
         }
 
+        public Korisnik GetKorisnikByEmail(string email)
+        {
+            return Context.Korisnik.FirstOrDefault(e => e.Email == email);
+        }
+
         public bool UserWithEmailExists(string email)
         {
             Korisnik korisnik = Context.Korisnik.FirstOrDefault(k => k.Email == email);

@@ -20,5 +20,7 @@ namespace Bioskop.Models.Dtos
 
         public TipKorisnika TipKorisnika { get; set; }
 
+        public string CustomerId { get; set; }
+
     }
 }

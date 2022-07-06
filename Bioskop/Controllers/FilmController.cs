@@ -39,9 +39,9 @@ namespace Bioskop.Controllers
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public ActionResult<List<Film>> GetFilmList([FromQuery] PaginationFilter filter, int godina)
+        public ActionResult<List<Film>> GetFilmList([FromQuery] PaginationFilter filter, string naziv)
         {
-            List<Film> films = filmRepository.GetFilmList(godina);
+            List<Film> films = filmRepository.GetFilmList(naziv);
 
             if (films == null || films.Count == 0)
             {

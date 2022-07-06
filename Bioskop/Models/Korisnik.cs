@@ -33,6 +33,8 @@ namespace Bioskop.Models
         [JsonIgnore]
         public TipKorisnika TipKorisnika { get; set; }
 
+        public string CustomerId { get; set; }
+
 
     }
 }

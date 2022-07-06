@@ -1,6 +1,7 @@
 using Bioskop.Data;
 using Bioskop.Helpers;
 using Bioskop.Models;
+using Bioskop.Models.Stripe;
 using Bioskop.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System;
 using System.Text;
 
@@ -21,6 +23,8 @@ namespace Bioskop
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            StripeConfiguration.ApiKey = Configuration.GetValue<string>("StripeSettings:PrivateKey");
+
         }
 
         public IConfiguration Configuration { get; set; }
@@ -42,6 +46,7 @@ namespace Bioskop
             services.AddScoped<ISedisteProjekcijeRepository, SedisteProjekcijeRepository>();
             services.AddScoped<IAuthHelper, AuthHelper>();
 
+            services.Configure<StripeSettings>(Configuration.GetSection("StripeSettings"));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

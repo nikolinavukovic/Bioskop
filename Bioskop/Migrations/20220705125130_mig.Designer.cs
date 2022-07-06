@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bioskop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220611121154_m")]
-    partial class m
+    [Migration("20220705125130_mig")]
+    partial class mig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,6 +93,9 @@ namespace Bioskop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -161,6 +164,17 @@ namespace Bioskop.Migrations
                             Prezime = "Milovac",
                             Telefon = "062593423",
                             TipKorisnikaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb")
+                        },
+                        new
+                        {
+                            KorisnikID = new Guid("fedd25cb-0b99-4f2c-a953-6b2b96001629"),
+                            Email = "demo@gmail.com",
+                            Ime = "demo",
+                            KorisnickoIme = "demo",
+                            Lozinka = "demodemodemo",
+                            Prezime = "demo",
+                            Telefon = "062593423",
+                            TipKorisnikaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb")
                         });
                 });
 
@@ -218,6 +232,15 @@ namespace Bioskop.Migrations
                             UkupanIznos = 0f,
                             VremePlacanja = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             VremeRezervacije = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            KupovinaID = new Guid("def3dc42-3395-4d59-b48b-7aa35a726a25"),
+                            KorisnikID = new Guid("fedd25cb-0b99-4f2c-a953-6b2b96001629"),
+                            Placeno = false,
+                            UkupanIznos = 0f,
+                            VremePlacanja = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            VremeRezervacije = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -248,21 +271,21 @@ namespace Bioskop.Migrations
                             ProjekcijaID = new Guid("955f059b-94d9-442f-b7df-4b42538b7e07"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("94e9fb20-1834-433c-b588-4a6e4eb32150"),
-                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 335, DateTimeKind.Local).AddTicks(8759)
+                            Vreme = new DateTime(2022, 7, 5, 14, 51, 30, 223, DateTimeKind.Local).AddTicks(5511)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("bc679089-e19f-43e4-946f-651ffbdb2afb"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4036)
+                            Vreme = new DateTime(2022, 7, 5, 14, 51, 30, 228, DateTimeKind.Local).AddTicks(3500)
                         },
                         new
                         {
                             ProjekcijaID = new Guid("167a01c0-2e68-46a8-b201-3a23e3a20bff"),
                             BrojStampanihKarata = 150,
                             FilmID = new Guid("1ae8137b-1674-4c91-a4b5-87a133f5dd87"),
-                            Vreme = new DateTime(2022, 6, 11, 14, 11, 48, 360, DateTimeKind.Local).AddTicks(4101)
+                            Vreme = new DateTime(2022, 7, 5, 14, 51, 30, 228, DateTimeKind.Local).AddTicks(3604)
                         });
                 });
 
@@ -381,6 +404,30 @@ namespace Bioskop.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Bioskop.Models.Transakcija", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid>("KorisnikId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("KupovinaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjekcijaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SedistaId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Transakcija");
+                });
+
             modelBuilder.Entity("Bioskop.Models.Zanr", b =>
                 {
                     b.Property<Guid>("ZanrID")
@@ -488,8 +535,8 @@ namespace Bioskop.Migrations
                     b.HasOne("Bioskop.Models.Kupovina", "Kupovina")
                         .WithMany("SedistaProjekcije")
                         .HasForeignKey("KupovinaID")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        ;
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Bioskop.Models.Projekcija", "Projekcija")
                         .WithMany()

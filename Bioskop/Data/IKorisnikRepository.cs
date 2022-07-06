@@ -16,5 +16,6 @@ namespace Bioskop.Data
         bool UserWithEmailExists(string email);
         bool UserWithUsernameExistst(string username);
         bool SaveChanges();
+        Korisnik GetKorisnikByEmail(string email);
     }
 }

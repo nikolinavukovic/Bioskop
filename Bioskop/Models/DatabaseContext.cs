@@ -20,6 +20,7 @@ namespace Bioskop.Models
         public DbSet<Sediste> Sediste { get; set; }
         public DbSet<SedisteProjekcije> SedisteProjekcije { get; set; }
         public DbSet<ZanrFilma> ZanrFilma { get; set; }
+        public DbSet<Transakcija> Transakcija { get; set; }
 
         private Tuple<string, string> HashPassword(string lozinka)
         {
@@ -123,7 +124,19 @@ namespace Bioskop.Models
                     Lozinka = "lozinkalozinka",
                     TipKorisnikaID = Guid.Parse("bc679089-e19f-43e4-946f-651ffbdb2afb")
 
-                }
+                },
+                                new Korisnik
+                                {
+                                    KorisnikID = Guid.Parse("fedd25cb-0b99-4f2c-a953-6b2b96001629"),
+                                    Ime = "demo",
+                                    Prezime = "demo",
+                                    Telefon = "062593423",
+                                    Email = "demo@gmail.com",
+                                    KorisnickoIme = "demo",
+                                    Lozinka = "demodemodemo",
+                                    TipKorisnikaID = Guid.Parse("bc679089-e19f-43e4-946f-651ffbdb2afb")
+
+                                }
                 );
 
             modelBuilder.Entity<Zanr>()
@@ -295,7 +308,13 @@ namespace Bioskop.Models
                     KupovinaID = Guid.Parse("2e026a0e-58b5-4c7a-8a8c-7d92bbc006c4"),
                     Placeno = false,
                     KorisnikID = Guid.Parse("167a01c0-2e68-46a8-b201-3a23e3a20bff"),
-                }
+                },
+                                new Kupovina
+                                {
+                                    KupovinaID = Guid.Parse("def3dc42-3395-4d59-b48b-7aa35a726a25"),
+                                    Placeno = false,
+                                    KorisnikID = Guid.Parse("fedd25cb-0b99-4f2c-a953-6b2b96001629"), //demo kupovina
+                                }
                 );
 
         }

@@ -17,9 +17,9 @@ namespace Bioskop.Data
             Context = context;
             Mapper = mapper;
         }
-        public List<Film> GetFilmList(int godina = default)
+        public List<Film> GetFilmList(string naziv = default)
         {
-            return Context.Film.Where(e => (godina == default || e.Godina.Equals(godina))).ToList();
+            return Context.Film.Where(e => (naziv == default || e.Naziv.Equals(naziv))).ToList();
         }
 
         public Film GetFilmById(Guid filmId)
