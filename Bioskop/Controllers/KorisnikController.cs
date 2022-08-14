@@ -36,7 +36,7 @@ namespace Bioskop.Controllers
 
         }
 
-        [AllowAnonymous] //mogu obrisati kasnije, dodato radi lakseg testiranja
+        [AllowAnonymous] //obrisati kasnije, dodato radi lakseg testiranja
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,7 +61,7 @@ namespace Bioskop.Controllers
             return Ok(pagedReponse);
         }
 
-        [AllowAnonymous] //mogu obrisati kasnije, dodato radi lakseg testiranja
+        [AllowAnonymous] //obrisati kasnije, dodato radi lakseg testiranja
         [HttpGet("{korisnikId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -155,18 +155,8 @@ namespace Bioskop.Controllers
 
                 if (oldKorisnik == null)
                 {
-                    return NotFound(); //Ukoliko ne postoji vratiti status 404 (NotFound).
+                    return NotFound(); 
                 }
-
-/*                if (EmailHelper.IsValidEmail(korisnik.Email) || korisnikRepository.UserWithEmailExists(korisnik.Email))
-                {
-                    throw new ArgumentException("The email field is not valid or the email is already in use.");
-                }
-
-                if (korisnikRepository.UserWithUsernameExistst(korisnik.KorisnickoIme))
-                {
-                    throw new ArgumentException("The username field is not valid or the username is already in use.");
-                }*/
 
                 TipKorisnika tk = oldKorisnik.TipKorisnika;
 

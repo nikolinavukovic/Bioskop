@@ -20,32 +20,27 @@ namespace Bioskop.Data
 
         public List<Kupovina> GetKupovinaList(string placeno = default, string korisnickoIme = default)
         {
-
+            //Omoguceno izlistavanje svih kupovina za samo jednog korisnika, kao i svih sedista kupljenih pri toj kupovini
             if (placeno != default && korisnickoIme != default)
             {
                 
-                Console.WriteLine(1);
                 return Context.Kupovina.Where(a => (a.Placeno.Equals(Convert.ToBoolean(placeno)) &&
                         (korisnickoIme == default || a.Korisnik.KorisnickoIme.Equals(korisnickoIme)))).Include(r => r.SedistaProjekcije).ToList();
             }
 
             else if (placeno != default  && korisnickoIme == default)
             {
-                Console.WriteLine(2);
                 return Context.Kupovina.Where(a => (a.Placeno.Equals(Convert.ToBoolean(placeno)))).Include(r => r.SedistaProjekcije)
                                                                                                    .ToList();
             }
             else if (placeno == default && korisnickoIme != default)
-            {
-                Console.WriteLine(3);
-                
+            {              
                 return Context.Kupovina.Where(a => 
                         (korisnickoIme == default || a.Korisnik.KorisnickoIme.Equals(korisnickoIme))).Include(r => r.SedistaProjekcije)
                                                                                                       .ToList();
             }
             else
             {
-                Console.WriteLine(4);
                 return Context.Kupovina.Include(r => r.SedistaProjekcije).ToList();
             }
 

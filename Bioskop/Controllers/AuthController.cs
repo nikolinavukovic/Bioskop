@@ -28,7 +28,6 @@ namespace Bioskop.Controllers
             {
                 var token = authHelper.GenerateJwt(principal, korisnik.TipKorisnika.Naziv);
 
-
                 return Ok(token);
             }
 

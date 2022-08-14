@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Bioskop.Models
 {
+    //Model objekta jednog sedista za jednu projekciju
     public class SedisteProjekcije
     {
         [Key]

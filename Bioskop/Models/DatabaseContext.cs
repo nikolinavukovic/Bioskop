@@ -309,11 +309,11 @@ namespace Bioskop.Models
                     Placeno = false,
                     KorisnikID = Guid.Parse("167a01c0-2e68-46a8-b201-3a23e3a20bff"),
                 },
-                                new Kupovina
+                                new Kupovina //demo kupovina
                                 {
                                     KupovinaID = Guid.Parse("def3dc42-3395-4d59-b48b-7aa35a726a25"),
                                     Placeno = false,
-                                    KorisnikID = Guid.Parse("fedd25cb-0b99-4f2c-a953-6b2b96001629"), //demo kupovina
+                                    KorisnikID = Guid.Parse("fedd25cb-0b99-4f2c-a953-6b2b96001629"), 
                                 }
                 );
 

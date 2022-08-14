@@ -38,26 +38,21 @@ namespace Bioskop.Controllers
 		{
             if (!price.KorisnikId.Equals(Guid.Empty) && !price.ProjekcijaId.Equals(Guid.Empty))
            {
-
-           
+                
                 Transakcija t = new Transakcija();
-
                 t.KorisnikId = price.KorisnikId;
                 t.ProjekcijaId = price.ProjekcijaId;
-            t.SedistaId = "";
-            //t.SedistaProjekcije = price.SedistaProjekcije.ToList<SedisteProjekcije>(); //sa null radi ali posle pravi problem jer ga ne zna
-            foreach (var item in price.SedistaId)
-            {
-                t.SedistaId += item + ',';     
-            }
-            t.SedistaId = t.SedistaId[0..^1];
+                t.SedistaId = "";
+                //t.SedistaProjekcije = price.SedistaProjekcije.ToList<SedisteProjekcije>(); //sa null radi ali posle pravi problem jer ga ne zna
+                foreach (var item in price.SedistaId)
+                {
+                    t.SedistaId += item + ',';     
+                }
+                t.SedistaId = t.SedistaId[0..^1];
 
                 context.Transakcija.Add(t);
                 context.SaveChanges();
             }
-
-
-
 
             var optionsCreate = new PriceCreateOptions
 			{
@@ -72,7 +67,7 @@ namespace Bioskop.Controllers
 
 			var options = new SessionCreateOptions
 			{
-				SuccessUrl = price.SuccessUrl, //promenila 
+				SuccessUrl = price.SuccessUrl, 
 				CancelUrl = price.FailureUrl,
 				Mode = "payment",
 				LineItems = new List<SessionLineItemOptions>

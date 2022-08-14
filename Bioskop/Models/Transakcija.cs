@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace Bioskop.Models
 {
+    //Model objekta koji se unosi u bazu prilikom stripe payment-a i koji se kasnije iscitava
     public class Transakcija
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        //[JsonIgnore]
-        //public List<SedisteProjekcije> SedistaProjekcije { get; set; }
-        //[NotMapped]
         public string SedistaId { get; set; }
         public Guid ProjekcijaId { get; set; }
         public Guid KupovinaId { get; set; }

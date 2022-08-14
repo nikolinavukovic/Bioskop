@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Bioskop.Models
 {
+    //Model objekta kupovine jednog ili vise sedista za jednu projekciju
     public class Kupovina
     {
         [Key]

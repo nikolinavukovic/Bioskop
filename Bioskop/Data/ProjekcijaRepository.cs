@@ -45,11 +45,6 @@ namespace Bioskop.Data
             if (p == null)
                 throw new EntryPointNotFoundException();
 
-            /*            p.ProjekcijaID = projekcija.ProjekcijaID;
-                        p.BrojSlobodnihSedista = projekcija.BrojSlobodnihSedista;
-                        p.Vreme = projekcija.Vreme;
-                        p.FilmID = projekcija.FilmID;*/
-
             Context.SaveChanges();
 
             return Mapper.Map<Projekcija>(p);
